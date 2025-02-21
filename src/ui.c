@@ -23,19 +23,19 @@ GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int he
 
 GtkWidget *create_box(GtkOrientation orientation, gint spacing)
 {
-    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, spacing);
+    GtkWidget *vbox = gtk_box_new(orientation, spacing);
     return vbox;
 }
 
-GtkWidget *create_text_view(GtkBox *box, gboolean expand, gboolean fill, guint padding)
+GtkWidget *create_text_view(gboolean editable, GtkWrapMode wrap_mode)
 {
     GtkWidget *text_view = gtk_text_view_new();
-    gtk_text_view_set_editable(GTK_TEXT_VIEW(text_view), FALSE);
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(text_view), GTK_WRAP_WORD_CHAR);
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(text_view), editable);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(text_view), wrap_mode);
     return text_view;
 }
 
-GtkWidget *create_entry(GtkBox *box, gboolean expand, gboolean fill, guint padding)
+GtkWidget *create_entry()
 {
     GtkWidget *input_entry = gtk_entry_new();
     return input_entry;
