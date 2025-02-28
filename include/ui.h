@@ -11,6 +11,8 @@ GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int he
 
 GtkWidget *create_box(GtkOrientation orientation, gint spacing);
 
+GtkWidget *create_scrolled_window();
+
 GtkWidget *create_text_view(gboolean editable, GtkWrapMode wrap_mode);
 
 GtkWidget *create_entry();

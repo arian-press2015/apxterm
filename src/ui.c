@@ -27,6 +27,17 @@ GtkWidget *create_box(GtkOrientation orientation, gint spacing)
     return vbox;
 }
 
+GtkWidget *create_scrolled_window()
+{
+    GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_widget_set_vexpand(scrolled_window, TRUE);
+    gtk_widget_set_hexpand(scrolled_window, TRUE);
+
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+    return scrolled_window;
+}
+
 GtkWidget *create_text_view(gboolean editable, GtkWrapMode wrap_mode)
 {
     GtkWidget *text_view = gtk_text_view_new();
