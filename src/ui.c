@@ -14,6 +14,12 @@ GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int he
     return window;
 }
 
+GtkWidget *create_paned_layout(GtkOrientation orientation)
+{
+    GtkWidget *paned = gtk_paned_new(orientation);
+    return paned;
+}
+
 GtkWidget *create_vte()
 {
     GtkWidget *vte = vte_terminal_new();
