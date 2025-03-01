@@ -7,6 +7,8 @@
         "stdio.h": "c",
         "unistd.h": "c",
         "gtk.h": "c",
-        "ui.h": "c"
+        "ui.h": "c",
+        "app.h": "c",
+        "signals.h": "c"
     }
 }

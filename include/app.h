@@ -3,8 +3,17 @@
 
 #include <gtk/gtk.h>
 
+typedef struct
+{
+    GList *terminals;
+    GtkWidget *entry;
+} AppData;
+
+#define APP_DATA_KEY "app-data"
+
 GtkApplication *init_app();
 int run_app(GtkApplication *app, int argc, char **argv);
 void clear_app(GtkApplication *app);
+AppData *get_app_data(GtkApplication *app);
 
 #endif
