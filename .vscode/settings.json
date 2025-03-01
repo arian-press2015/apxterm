@@ -9,6 +9,8 @@
         "gtk.h": "c",
         "ui.h": "c",
         "app.h": "c",
-        "signals.h": "c"
+        "signals.h": "c",
+        "parser.h": "c",
+        "string.h": "c"
     }
 }

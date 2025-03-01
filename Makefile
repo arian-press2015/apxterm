@@ -2,8 +2,8 @@
 CC = gcc
 
 # Compiler and linker flags
-CFLAGS = `pkg-config --cflags gtk+-3.0 vte-2.91` -Wall -Wextra -std=c11 -Iinclude
-LDFLAGS = `pkg-config --libs gtk+-3.0 vte-2.91`
+CFLAGS = `pkg-config --cflags gtk+-3.0 vte-2.91` -Wall -Wextra -std=c11 -Iinclude -I/usr/local/include
+LDFLAGS = `pkg-config --libs gtk+-3.0 vte-2.91` -L/usr/local/lib -lcjson
 
 # Directories
 SRC_DIR = src

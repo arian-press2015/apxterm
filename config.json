@@ -1,0 +1,32 @@
+{
+    "users": [
+        {
+            "username": "ap2015",
+            "folders": [
+                {
+                    "name": "MTN",
+                    "folders": [
+                        {
+                            "name": "DMZ",
+                            "folders": [],
+                            "servers": [
+                                {
+                                    "name": "master",
+                                    "ip": "192.168.0.1",
+                                    "ssh-key": "~/.ssh/id_rsa.pub"
+                                }
+                            ]
+                        }
+                    ],
+                    "servers": [
+                        {
+                        "name": "onepaas",
+                        "ip": "192.168.0.2",
+                        "ssh-key": "~/.ssh/id_rsa.pub"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
