@@ -2,11 +2,13 @@
 #define APP_H
 
 #include <gtk/gtk.h>
+#include "parser.h"
 
 typedef struct
 {
     GList *terminals;
     GtkWidget *entry;
+    Config *config;
 } AppData;
 
 #define APP_DATA_KEY "app-data"

@@ -28,12 +28,15 @@ void activate_app(GtkApplication *app, gpointer user_data)
 {
     AppData *app_data = get_app_data(app);
 
-    GtkWidget *window = create_main_window(app, "apXterm", 700, 400);
+    GtkWidget *window = create_main_window(app, "apXterm", 1200, 700);
 
     AppLayout *app_layout = create_main_layout(GTK_CONTAINER(window));
 
     add_vte(app_layout, app_data);
     add_vte(app_layout, app_data);
+
+    GtkWidget *tree_view = create_tree_view(app_data->config);
+    gtk_box_pack_start(GTK_BOX(app_layout->sidebar_box), tree_view, TRUE, TRUE, 0);
 
     app_data->entry = gtk_entry_new();
     gtk_entry_set_placeholder_text(GTK_ENTRY(app_data->entry), "Enter command for all terminals");

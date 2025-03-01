@@ -28,6 +28,11 @@ AppData *create_app_data()
 {
     AppData *app_data = g_new0(AppData, 1);
     app_data->terminals = NULL;
+    app_data->config = get_config("config.json");
+    if (!app_data->config)
+    {
+        g_error(">> Failed to load config.json\n");
+    }
 
     return app_data;
 }
