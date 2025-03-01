@@ -77,20 +77,7 @@ Config *parse_config(const char *json_data)
 
         for (int i = 0; i < config->user_count; ++i)
         {
-            config->users[i] = malloc(sizeof(User));
-            if (!config->users[i])
-            {
-                g_error(">> Failed to allocate user %d", i);
-                for (int j = 0; j < i; j++)
-                {
-                    free_user(config->users[j]);
-                }
-                free(config->users);
-                free(config);
-                cJSON_Delete(root);
-                return NULL;
-            }
-            parse_user(cJSON_GetArrayItem(users_json, i), config->users[i]);
+            parse_user(cJSON_GetArrayItem(users_json, i), &config->users[i]);
         }
     }
 
@@ -243,10 +230,8 @@ void free_config(Config *config)
 
     for (int i = 0; i < config->user_count; ++i)
     {
-        free_user(config->users[i]);
-        free(config->users[i]);
+        free_user(&config->users[i]);
     }
     free(config->users);
-
     free(config);
 }

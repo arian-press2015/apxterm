@@ -36,7 +36,7 @@ typedef struct User
 
 typedef struct Config
 {
-    User **users;
+    User *users;
     int user_count;
 } Config;
 

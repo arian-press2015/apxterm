@@ -25,6 +25,11 @@
                         "ssh-key": "~/.ssh/id_rsa.pub"
                         }
                     ]
+                },
+                {
+                    "name": "MCI",
+                    "folders": [],
+                    "servers": []
                 }
             ]
         }
