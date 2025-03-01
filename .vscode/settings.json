@@ -6,6 +6,7 @@
         "fcntl.h": "c",
         "stdio.h": "c",
         "unistd.h": "c",
-        "gtk.h": "c"
+        "gtk.h": "c",
+        "ui.h": "c"
     }
 }

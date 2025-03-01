@@ -15,7 +15,8 @@
                 "/usr/include/libpng16",
                 "/usr/include/glib-2.0",
                 "/usr/lib/x86_64-linux-gnu/glib-2.0/include/",
-                "/usr/include/harfbuzz/"
+                "/usr/include/harfbuzz/",
+                "/usr/include/vte-2.91/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

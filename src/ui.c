@@ -6,12 +6,6 @@ void append_to_container(GtkContainer *container, GtkWidget *widget)
     gtk_container_add(container, widget);
 }
 
-void append_to_box(GtkBox *box, GtkWidget *widget, gboolean expand, gboolean fill, guint padding)
-{
-    // use GTK_BOX(box_widget) if the box is of type GtkWidget
-    gtk_box_pack_start(box, widget, expand, fill, padding);
-}
-
 GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int height)
 {
     GtkWidget *window = gtk_application_window_new(app);
@@ -21,33 +15,41 @@ GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int he
     return window;
 }
 
-GtkWidget *create_box(GtkOrientation orientation, gint spacing)
+GtkWidget *create_vte()
 {
-    GtkWidget *vbox = gtk_box_new(orientation, spacing);
-    return vbox;
-}
+    GtkWidget *vte = vte_terminal_new();
 
-GtkWidget *create_scrolled_window()
-{
-    GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_widget_set_vexpand(scrolled_window, TRUE);
-    gtk_widget_set_hexpand(scrolled_window, TRUE);
+    VtePtyFlags pty_flags = VTE_PTY_DEFAULT;       // Default PTY settings
+    const char *working_directory = NULL;          // Use current directory
+    char *argv_child[] = {"/bin/fish", NULL};      // Run fish
+    char **envv = NULL;                            // Inherit parent’s environment
+    GSpawnFlags spawn_flags = G_SPAWN_SEARCH_PATH; // Search PATH for executable
+    GSpawnChildSetupFunc child_setup = NULL;       // No custom setup
+    gpointer child_setup_data = NULL;              // No setup data
+    GPid child_pid = -1;                           // Placeholder for PID
+    GCancellable *cancellable = NULL;              // No cancellation
+    GError *error = NULL;                          // Error handling
 
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gboolean success = vte_terminal_spawn_sync(
+        VTE_TERMINAL(vte),
+        pty_flags,
+        working_directory,
+        argv_child,
+        envv,
+        spawn_flags,
+        child_setup,
+        child_setup_data,
+        &child_pid,
+        cancellable,
+        &error);
 
-    return scrolled_window;
-}
+    if (!success)
+    {
+        g_printerr("Failed to spawn terminal: %s\n", error ? error->message : "Unknown error");
+        if (error)
+            g_error_free(error);
+        return NULL;
+    }
 
-GtkWidget *create_text_view(gboolean editable, GtkWrapMode wrap_mode)
-{
-    GtkWidget *text_view = gtk_text_view_new();
-    gtk_text_view_set_editable(GTK_TEXT_VIEW(text_view), editable);
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(text_view), wrap_mode);
-    return text_view;
-}
-
-GtkWidget *create_entry()
-{
-    GtkWidget *input_entry = gtk_entry_new();
-    return input_entry;
+    return vte;
 }
