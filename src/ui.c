@@ -2,7 +2,6 @@
 
 void append_to_container(GtkContainer *container, GtkWidget *widget)
 {
-    // use GTK_CONTAINER(some_widget) if container is a widget
     gtk_container_add(container, widget);
 }
 
