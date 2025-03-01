@@ -1,8 +1,43 @@
 #include "ui.h"
 
+void set_widget_size(GtkWidget *widget, gint width, gint height);
+
 void append_to_container(GtkContainer *container, GtkWidget *widget)
 {
     gtk_container_add(container, widget);
+}
+
+void append_to_paned_layout(GtkPaned *paned, GtkWidget *widget1, gboolean resize1, gboolean shrink1,
+                            GtkWidget *widget2, gboolean resize2, gboolean shrink2)
+{
+    if (!paned || !widget1 || !widget2)
+    {
+        g_error(" >>Invalid arguments to append_to_paned_layout()");
+    }
+
+    gtk_paned_pack1(GTK_PANED(paned), widget1, resize1, shrink1);
+    gtk_paned_pack2(GTK_PANED(paned), widget2, resize2, shrink2);
+}
+
+AppLayout *create_main_layout(GtkContainer *window)
+{
+    GtkWidget *paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
+    if (!paned)
+        g_error("Failed to create GtkPaned!");
+    append_to_container(window, paned);
+
+    GtkWidget *sidebar_box = create_box(GTK_ORIENTATION_VERTICAL, 5, 200, -1);
+    GtkWidget *terminals_box = create_box(GTK_ORIENTATION_VERTICAL, 5, -1, -1);
+
+    append_to_paned_layout(GTK_PANED(paned), sidebar_box, FALSE, FALSE, terminals_box, TRUE, TRUE);
+
+    AppLayout *layout = g_new0(AppLayout, 1);
+    if (!layout)
+        g_error("Failed to allocate AppLayout!");
+    layout->sidebar_box = sidebar_box;
+    layout->terminals_box = terminals_box;
+
+    return layout;
 }
 
 GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int height)
@@ -18,6 +53,15 @@ GtkWidget *create_paned_layout(GtkOrientation orientation)
 {
     GtkWidget *paned = gtk_paned_new(orientation);
     return paned;
+}
+
+GtkWidget *create_box(GtkOrientation orientation, gint spacing, gint width, gint height)
+{
+    GtkWidget *box = gtk_box_new(orientation, spacing);
+
+    set_widget_size(box, width, height);
+
+    return box;
 }
 
 GtkWidget *create_vte()
@@ -57,4 +101,9 @@ GtkWidget *create_vte()
     }
 
     return vte;
+}
+
+void set_widget_size(GtkWidget *widget, gint width, gint height)
+{
+    gtk_widget_set_size_request(widget, width, height);
 }
