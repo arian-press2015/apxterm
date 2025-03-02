@@ -7,9 +7,9 @@ void connect_signal(gpointer instance, const gchar *signal, GCallback callback, 
     g_signal_connect(instance, signal, callback, user_data);
 }
 
-void add_vte(AppLayout *app_layout, AppData *app_data)
+void add_vte(AppLayout *app_layout, AppData *app_data, Server *server)
 {
-    GtkWidget *scroll = create_vte_box(app_data);
+    GtkWidget *scroll = create_vte_box(app_data,server);
 
     int columns = 1;
     if (app_data->vte_count >= COLUMN_THRESHOLD_3)
@@ -32,14 +32,19 @@ void activate_app(GtkApplication *app, gpointer user_data)
 
     AppLayout *app_layout = create_main_layout(GTK_CONTAINER(window));
 
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
+    Server *server = g_new0(Server, 1);
+    snprintf(server->name, MAX_NAME_LEN, "OnePaaS");
+    snprintf(server->ip, MAX_IP_LEN, "172.16.0.1");
+    snprintf(server->ssh_key, MAX_SSH_KEY_LEN, "~/.ssh/id_rsa.pub");
+
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
+    add_vte(app_layout, app_data, server);
 
     GtkWidget *tree_view = create_tree_view(app_data->config);
     gtk_box_pack_start(GTK_BOX(app_layout->sidebar_box), tree_view, TRUE, TRUE, 0);

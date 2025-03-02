@@ -204,12 +204,12 @@ void fill_vte_grid(AppLayout *app_layout, GList *scrolls, int columns)
     g_list_free(scrolls); // Free the list, not the widgets (already unref’d)
 }
 
-GtkWidget *create_vte_box(AppData *app_data)
+GtkWidget *create_vte_box(AppData *app_data, Server *server)
 {
     GtkWidget *vte_box = create_box(GTK_ORIENTATION_VERTICAL, 5, -1, -1);
 
-    char label[32];
-    snprintf(label, sizeof(label), "exclude this terminal");
+    char label[MAX_NAME_LEN + MAX_IP_LEN + 4];
+    snprintf(label, sizeof(label), "%s [%s]", server->name, server->ip);
 
     GtkWidget *checkbox = gtk_check_button_new_with_label(label);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbox), FALSE);
@@ -222,6 +222,7 @@ GtkWidget *create_vte_box(AppData *app_data)
     TerminalEntry *entry = g_new0(TerminalEntry, 1);
     entry->vte = vte;
     entry->checkbox = checkbox;
+    entry->server = server;
     app_data->terminals = g_list_append(app_data->terminals, entry);
     app_data->vte_count++;
 

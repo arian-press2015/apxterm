@@ -8,6 +8,7 @@ typedef struct TerminalEntry
 {
     GtkWidget *vte;
     GtkWidget *checkbox;
+    Server *server;
 } TerminalEntry;
 
 typedef struct
