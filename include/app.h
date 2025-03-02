@@ -8,6 +8,7 @@ typedef struct
 {
     GList *terminals;
     GtkWidget *entry;
+    int vte_count;
     Config *config;
 } AppData;
 

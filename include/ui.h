@@ -5,9 +5,11 @@
 #include <vte/vte.h>
 #include "parser.h"
 
-typedef struct {
+typedef struct
+{
     GtkWidget *sidebar_box;
     GtkWidget *terminals_box;
+    GtkWidget *vte_grid;
 } AppLayout;
 
 enum
@@ -16,6 +18,11 @@ enum
     COLUMN_NAME,
     NUM_COLUMNS
 };
+
+#define COLUMN_THRESHOLD_2 5
+#define COLUMN_THRESHOLD_3 13
+
+#define GRID_SPACING 2
 
 void append_to_container(GtkContainer *container, GtkWidget *widget);
 void append_to_paned_layout(GtkPaned *paned, GtkWidget *widget1, gboolean resize1, gboolean shrink1,

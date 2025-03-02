@@ -31,14 +31,24 @@ AppLayout *create_main_layout(GtkContainer *window)
 
     GtkWidget *sidebar_box = create_box(GTK_ORIENTATION_VERTICAL, 5, 350, -1);
     GtkWidget *terminals_box = create_box(GTK_ORIENTATION_VERTICAL, 5, -1, -1);
+    GtkWidget *vte_grid = gtk_grid_new();
+    gtk_grid_set_row_homogeneous(GTK_GRID(vte_grid), TRUE);
+    gtk_grid_set_column_homogeneous(GTK_GRID(vte_grid), TRUE);
+    gtk_grid_set_row_spacing(GTK_GRID(vte_grid), GRID_SPACING);
+    gtk_grid_set_column_spacing(GTK_GRID(vte_grid), GRID_SPACING);
+
+    gtk_box_pack_start(GTK_BOX(terminals_box), vte_grid, TRUE, TRUE, 0);
 
     append_to_paned_layout(GTK_PANED(paned), sidebar_box, FALSE, FALSE, terminals_box, TRUE, TRUE);
 
     AppLayout *layout = g_new0(AppLayout, 1);
     if (!layout)
+    {
         g_error("Failed to allocate AppLayout!");
+    }
     layout->sidebar_box = sidebar_box;
     layout->terminals_box = terminals_box;
+    layout->vte_grid = vte_grid;
 
     return layout;
 }
@@ -145,7 +155,6 @@ void add_server_to_folder(GtkTreeStore *store, Folder *folder, GtkTreeIter *fold
                            -1);
     }
 }
-
 
 GtkWidget *create_box(GtkOrientation orientation, gint spacing, gint width, gint height)
 {
