@@ -170,6 +170,40 @@ GtkWidget *create_vte_grid()
     return NULL;
 }
 
+GList *clear_vte_grid(AppLayout *app_layout)
+{
+    GList *children = gtk_container_get_children(GTK_CONTAINER(app_layout->vte_grid));
+    GList *removed_scrolls = NULL; // Store existing scrolled windows
+    for (GList *iter = children; iter; iter = iter->next)
+    {
+        GtkWidget *child = GTK_WIDGET(iter->data);
+        g_object_ref(child); // Keep it alive
+        gtk_container_remove(GTK_CONTAINER(app_layout->vte_grid), child);
+        removed_scrolls = g_list_append(removed_scrolls, child); // Save for reuse
+    }
+    g_list_free(children);
+
+    return removed_scrolls;
+}
+
+void fill_vte_grid(AppLayout *app_layout, GList *scrolls, int columns)
+{
+    int row = 0, col = 0;
+    for (GList *iter = scrolls; iter; iter = iter->next)
+    {
+        GtkWidget *vte_scroll = GTK_WIDGET(iter->data);
+        gtk_grid_attach(GTK_GRID(app_layout->vte_grid), vte_scroll, col, row, 1, 1);
+        col++;
+        if (col >= columns)
+        {
+            col = 0;
+            row++;
+        }
+        g_object_unref(vte_scroll); // Release ref after attaching
+    }
+    g_list_free(scrolls); // Free the list, not the widgets (already unref’d)
+}
+
 GtkWidget *create_vte_box(AppData *app_data)
 {
     GtkWidget *vte_box = create_box(GTK_ORIENTATION_VERTICAL, 5, -1, -1);

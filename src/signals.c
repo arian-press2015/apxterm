@@ -17,37 +17,11 @@ void add_vte(AppLayout *app_layout, AppData *app_data)
     else if (app_data->vte_count >= COLUMN_THRESHOLD_2)
         columns = 2;
 
-    // Clear existing VTEs from the grid
-    GList *children = gtk_container_get_children(GTK_CONTAINER(app_layout->vte_grid));
-    GList *existing_scrolls = NULL; // Store existing scrolled windows
-    for (GList *iter = children; iter; iter = iter->next)
-    {
-        GtkWidget *child = GTK_WIDGET(iter->data);
-        g_object_ref(child); // Keep it alive
-        gtk_container_remove(GTK_CONTAINER(app_layout->vte_grid), child);
-        existing_scrolls = g_list_append(existing_scrolls, child); // Save for reuse
-    }
-    g_list_free(children);
+    GList *removed_scrolls = clear_vte_grid(app_layout);
+    removed_scrolls = g_list_append(removed_scrolls, scroll);
+    g_object_ref(scroll);
 
-    // Redistribute existing VTEs and add the new one
-    int row = 0, col = 0;
-    for (GList *iter = existing_scrolls; iter; iter = iter->next)
-    {
-        GtkWidget *vte_scroll = GTK_WIDGET(iter->data);
-        gtk_grid_attach(GTK_GRID(app_layout->vte_grid), vte_scroll, col, row, 1, 1);
-        col++;
-        if (col >= columns)
-        {
-            col = 0;
-            row++;
-        }
-        g_object_unref(vte_scroll); // Release ref after attaching
-    }
-
-    // Add the new VTE
-    gtk_grid_attach(GTK_GRID(app_layout->vte_grid), scroll, col, row, 1, 1);
-
-    g_list_free(existing_scrolls); // Free the list, not the widgets (already unref’d)
+    fill_vte_grid(app_layout, removed_scrolls, columns);
 }
 
 void activate_app(GtkApplication *app, gpointer user_data)
@@ -58,13 +32,6 @@ void activate_app(GtkApplication *app, gpointer user_data)
 
     AppLayout *app_layout = create_main_layout(GTK_CONTAINER(window));
 
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
-    add_vte(app_layout, app_data);
     add_vte(app_layout, app_data);
     add_vte(app_layout, app_data);
     add_vte(app_layout, app_data);

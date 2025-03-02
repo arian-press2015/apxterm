@@ -34,6 +34,8 @@ GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int he
 GtkWidget *create_paned_layout(GtkOrientation orientation);
 GtkWidget *create_box(GtkOrientation orientation, gint spacing, gint width, gint height);
 GtkWidget *create_vte_grid();
+GList *clear_vte_grid(AppLayout *app_layout);
+void fill_vte_grid(AppLayout *app_layout, GList *scrolls, int columns);
 GtkWidget *create_vte_box(AppData *app_data);
 GtkWidget *create_scrolled_vte(GtkWidget *vte);
 GtkWidget *create_vte();
