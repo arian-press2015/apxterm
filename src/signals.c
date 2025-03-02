@@ -98,8 +98,12 @@ void send_to_all_terminals(GtkButton *button, gpointer user_data)
     GList *iter;
     for (iter = app_data->terminals; iter != NULL; iter = iter->next)
     {
-        VteTerminal *terminal = VTE_TERMINAL(iter->data);
-        vte_terminal_feed_child(terminal, command_with_newline, -1);
+        TerminalEntry *entry = (TerminalEntry *)iter->data;
+        VteTerminal *terminal = VTE_TERMINAL(entry->vte);
+        if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry->checkbox)))
+        {
+            vte_terminal_feed_child(terminal, command_with_newline, -1);
+        }
     }
 
     // Clear the entry field

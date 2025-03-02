@@ -185,7 +185,10 @@ GtkWidget *create_vte_box(AppData *app_data)
     GtkWidget *scroll = create_scrolled_vte(vte);
     gtk_box_pack_start(GTK_BOX(vte_box), scroll, TRUE, TRUE, 0);
 
-    app_data->terminals = g_list_append(app_data->terminals, vte);
+    TerminalEntry *entry = g_new0(TerminalEntry, 1);
+    entry->vte = vte;
+    entry->checkbox = checkbox;
+    app_data->terminals = g_list_append(app_data->terminals, entry);
     app_data->vte_count++;
 
     return vte_box;

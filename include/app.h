@@ -4,6 +4,12 @@
 #include <gtk/gtk.h>
 #include "parser.h"
 
+typedef struct TerminalEntry
+{
+    GtkWidget *vte;
+    GtkWidget *checkbox;
+} TerminalEntry;
+
 typedef struct
 {
     GList *terminals;
