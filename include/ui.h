@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 #include <vte/vte.h>
 #include "parser.h"
+#include "app.h"
 
 typedef struct
 {
@@ -32,6 +33,9 @@ GtkWidget *create_tree_view(Config *config);
 GtkWidget *create_main_window(GtkApplication *app, char *name, int width, int height);
 GtkWidget *create_paned_layout(GtkOrientation orientation);
 GtkWidget *create_box(GtkOrientation orientation, gint spacing, gint width, gint height);
+GtkWidget *create_vte_grid();
+GtkWidget *create_vte_box(AppData *app_data);
+GtkWidget *create_scrolled_vte(GtkWidget *vte);
 GtkWidget *create_vte();
 
 #endif

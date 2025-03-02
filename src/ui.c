@@ -165,6 +165,40 @@ GtkWidget *create_box(GtkOrientation orientation, gint spacing, gint width, gint
     return box;
 }
 
+GtkWidget *create_vte_grid()
+{
+    return NULL;
+}
+
+GtkWidget *create_vte_box(AppData *app_data)
+{
+    GtkWidget *vte_box = create_box(GTK_ORIENTATION_VERTICAL, 5, -1, -1);
+
+    char label[32];
+    snprintf(label, sizeof(label), "exclude this terminal");
+
+    GtkWidget *checkbox = gtk_check_button_new_with_label(label);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(checkbox), FALSE);
+    gtk_box_pack_start(GTK_BOX(vte_box), checkbox, FALSE, FALSE, 0);
+
+    GtkWidget *vte = create_vte();
+    GtkWidget *scroll = create_scrolled_vte(vte);
+    gtk_box_pack_start(GTK_BOX(vte_box), scroll, TRUE, TRUE, 0);
+
+    app_data->terminals = g_list_append(app_data->terminals, vte);
+    app_data->vte_count++;
+
+    return vte_box;
+}
+
+GtkWidget *create_scrolled_vte(GtkWidget *vte)
+{
+    GtkWidget *scroll = gtk_scrolled_window_new(NULL, NULL);
+    append_to_container(GTK_CONTAINER(scroll), vte);
+
+    return scroll;
+}
+
 GtkWidget *create_vte()
 {
     GtkWidget *vte = vte_terminal_new();
@@ -195,9 +229,7 @@ GtkWidget *create_vte()
 
     if (!success)
     {
-        g_printerr("Failed to spawn terminal: %s\n", error ? error->message : "Unknown error");
-        if (error)
-            g_error_free(error);
+        g_error("Failed to spawn terminal: %s\n", error ? error->message : "Unknown error");
         return NULL;
     }
 

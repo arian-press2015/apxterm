@@ -9,18 +9,7 @@ void connect_signal(gpointer instance, const gchar *signal, GCallback callback, 
 
 void add_vte(AppLayout *app_layout, AppData *app_data)
 {
-    GtkWidget *vte = create_vte();
-    if (!vte)
-    {
-        g_error("Failed to create VTE terminal\n");
-        return;
-    }
-
-    app_data->terminals = g_list_append(app_data->terminals, vte);
-    app_data->vte_count++;
-
-    GtkWidget *scroll = gtk_scrolled_window_new(NULL, NULL);
-    append_to_container(GTK_CONTAINER(scroll), vte);
+    GtkWidget *scroll = create_vte_box(app_data);
 
     int columns = 1;
     if (app_data->vte_count >= COLUMN_THRESHOLD_3)
