@@ -9,6 +9,7 @@ LDFLAGS = `pkg-config --libs gtk+-3.0 vte-2.91` -L/usr/local/lib -lcjson
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
+DEB_DIR = debian
 
 # Target executable
 TARGET = $(BIN_DIR)/apXterm
@@ -16,6 +17,8 @@ TARGET = $(BIN_DIR)/apXterm
 # Source and object files
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+
+DEB_PACKAGE = apxterm_1.0.1_amd64.deb
 
 # Default target
 all: $(TARGET)
@@ -40,3 +43,33 @@ run: $(TARGET)
 # Clean build files
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
+
+# Build Debian package
+deb: $(TARGET)
+	# Create Debian package structure
+	@mkdir -p $(DEB_DIR)/usr/bin
+	@mkdir -p $(DEB_DIR)/DEBIAN
+	
+	# Copy the binary to /usr/bin in the package
+	cp $(TARGET) $(DEB_DIR)/usr/bin/
+	
+	# Create the control file
+	@echo "Package: apxterm" > $(DEB_DIR)/DEBIAN/control
+	@echo "Version: 1.0.0" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Section: utils" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Priority: optional" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Architecture: amd64" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Depends: libgtk-3-0 (>= 3.0), libvte-2.91-0 (>= 0.50), libcjson1" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Maintainer: AP2015 <arian.press2015@gmail.com>" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Description: A MobaXterm for Linux" >> $(DEB_DIR)/DEBIAN/control
+	@echo " apXterm is a GTK+-based terminal emulator with support for multiple SSH sessions." >> $(DEB_DIR)/DEBIAN/control
+	
+	# Set permissions
+	@chmod 755 $(DEB_DIR)/usr/bin/apXterm
+	
+	# Build the .deb package
+	dpkg-deb --build $(DEB_DIR) $(DEB_PACKAGE)
+
+	rm -r debian
+
+.PHONY: all run clean deb
