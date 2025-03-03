@@ -11,6 +11,9 @@ OBJ_DIR = obj
 BIN_DIR = bin
 DEB_DIR = debian
 
+# version
+VERSION = 1.0-1
+
 # Target executable
 TARGET = $(BIN_DIR)/apxterm
 
@@ -18,7 +21,7 @@ TARGET = $(BIN_DIR)/apxterm
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
-DEB_PACKAGE = apxterm_1.0.1_amd64.deb
+DEB_PACKAGE = apxterm_$(VERSION)_amd64.deb
 
 # Default target
 all: $(TARGET)
@@ -57,7 +60,7 @@ deb: $(TARGET)
 	
 	# Create the control file
 	@echo "Package: apxterm" > $(DEB_DIR)/DEBIAN/control
-	@echo "Version: 1.0.1" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Version: $(VERSION)" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Section: utils" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Priority: optional" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Architecture: amd64" >> $(DEB_DIR)/DEBIAN/control
