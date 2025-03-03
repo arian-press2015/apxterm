@@ -185,6 +185,7 @@ void parse_server(cJSON *server_json, Server *server)
     server->ip[0] = '\0';
     server->ssh_key[0] = '\0';
     server->id[0] = '\0';
+    server->username[0] = '\0';
 
     cJSON *id_json = cJSON_GetObjectItemCaseSensitive(server_json, "id");
     if (id_json && cJSON_IsString(id_json))
@@ -205,6 +206,13 @@ void parse_server(cJSON *server_json, Server *server)
     {
         strncpy(server->ip, ip_json->valuestring, MAX_IP_LEN - 1);
         server->ip[MAX_IP_LEN - 1] = '\0';
+    }
+
+    cJSON *username_json = cJSON_GetObjectItemCaseSensitive(server_json, "username");
+    if (username_json && cJSON_IsString(username_json))
+    {
+        strncpy(server->username, username_json->valuestring, MAX_USERNAME_LEN - 1);
+        server->id[MAX_USERNAME_LEN - 1] = '\0';
     }
 
     cJSON *ssh_key_json = cJSON_GetObjectItemCaseSensitive(server_json, "ssh-key");

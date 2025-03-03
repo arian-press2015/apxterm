@@ -16,6 +16,7 @@
                                 {
                                     "id": "server1",
                                     "name": "master",
+                                    "username": "root",
                                     "ip": "192.168.0.1",
                                     "ssh-key": "~/.ssh/id_rsa.pub"
                                 }
@@ -29,6 +30,7 @@
                                 {
                                     "id": "server2",
                                     "name": "twopaas",
+                                    "username": "root",
                                     "ip": "192.168.0.3",
                                     "ssh-key": "~/.ssh/id_rsa.pub"
                                 }
@@ -39,8 +41,16 @@
                         {
                         "id": "server3",
                         "name": "onepaas",
+                        "username": "root",
                         "ip": "192.168.0.2",
                         "ssh-key": "~/.ssh/id_rsa.pub"
+                        },
+                        {
+                        "id": "server4",
+                        "name": "shayan",
+                        "username": "archy",
+                        "ip": "172.16.96.26",
+                        "ssh-key": ""
                         }
                     ]
                 },

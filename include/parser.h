@@ -11,12 +11,14 @@
 #define MAX_IP_LEN 16
 #define MAX_SSH_KEY_LEN 256
 #define MAX_ID_LEN 32
+#define MAX_USERNAME_LEN 32
 
-typedef struct
+typedef struct Server
 {
     char id[MAX_ID_LEN];
     char name[MAX_NAME_LEN];
     char ip[MAX_IP_LEN];
+    char username[MAX_USERNAME_LEN];
     char ssh_key[MAX_SSH_KEY_LEN];
 } Server;
 
