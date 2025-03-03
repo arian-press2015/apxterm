@@ -48,10 +48,12 @@ clean:
 deb: $(TARGET)
 	# Create Debian package structure
 	@mkdir -p $(DEB_DIR)/usr/bin
+	@mkdir -p $(DEB_DIR)/usr/share/apxterm
 	@mkdir -p $(DEB_DIR)/DEBIAN
 	
 	# Copy the binary to /usr/bin in the package
 	cp $(TARGET) $(DEB_DIR)/usr/bin/
+	cp config.json $(DEB_DIR)/usr/share/apxterm/config.json
 	
 	# Create the control file
 	@echo "Package: apxterm" > $(DEB_DIR)/DEBIAN/control
@@ -64,10 +66,16 @@ deb: $(TARGET)
 	@echo "Description: A MobaXterm for Linux" >> $(DEB_DIR)/DEBIAN/control
 	@echo " apXterm is a GTK+-based terminal emulator with support for multiple SSH sessions." >> $(DEB_DIR)/DEBIAN/control
 	
-	# Set permissions
+	# Create postinst script
+	@echo "#!/bin/sh" > $(DEB_DIR)/DEBIAN/postinst
+	@echo "set -e" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "# Create ~/.config/apxterm if it doesn't exist" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "[ ! -d \"\$$HOME/.config/apxterm\" ] && mkdir -p \"\$$HOME/.config/apxterm\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "# Copy default config if not present" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "[ ! -f \"\$$HOME/.config/apxterm/config.json\" ] && cp /usr/share/apxterm/config.json \"\$$HOME/.config/apxterm/config.json\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@chmod 755 $(DEB_DIR)/DEBIAN/postinst
 	@chmod 755 $(DEB_DIR)/usr/bin/apXterm
-	
-	# Build the .deb package
+	@chmod 644 $(DEB_DIR)/usr/share/apxterm/config.json
 	dpkg-deb --build $(DEB_DIR) $(DEB_PACKAGE)
 
 	rm -r debian

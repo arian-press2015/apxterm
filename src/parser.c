@@ -17,7 +17,7 @@ char *get_config_path()
         g_error("Could not determine home directory");
     }
     char *config_path = (char *)malloc(sizeof(char) * MAX_CONFIG_PATH_LEN);
-    snprintf(config_path, MAX_CONFIG_PATH_LEN, "%s/.config/apxterm/apconfig.json", home_dir);
+    snprintf(config_path, MAX_CONFIG_PATH_LEN, "%s/.config/apxterm/config.json", home_dir);
 
     return config_path;
 }
