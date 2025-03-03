@@ -5,7 +5,7 @@ AppData *create_app_data();
 
 GtkApplication *init_app()
 {
-    GtkApplication *app = gtk_application_new("org.gtk.apXterm", G_APPLICATION_FLAGS_NONE);
+    GtkApplication *app = gtk_application_new("org.gtk.apxterm", G_APPLICATION_FLAGS_NONE);
 
     AppData *app_data = create_app_data();
     g_object_set_data_full(G_OBJECT(app), APP_DATA_KEY, app_data, g_free);

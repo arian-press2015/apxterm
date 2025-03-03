@@ -12,7 +12,7 @@ BIN_DIR = bin
 DEB_DIR = debian
 
 # Target executable
-TARGET = $(BIN_DIR)/apXterm
+TARGET = $(BIN_DIR)/apxterm
 
 # Source and object files
 SRC = $(wildcard $(SRC_DIR)/*.c)
@@ -57,24 +57,42 @@ deb: $(TARGET)
 	
 	# Create the control file
 	@echo "Package: apxterm" > $(DEB_DIR)/DEBIAN/control
-	@echo "Version: 1.0.0" >> $(DEB_DIR)/DEBIAN/control
+	@echo "Version: 1.0.1" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Section: utils" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Priority: optional" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Architecture: amd64" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Depends: libgtk-3-0 (>= 3.0), libvte-2.91-0 (>= 0.50), libcjson1" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Maintainer: AP2015 <arian.press2015@gmail.com>" >> $(DEB_DIR)/DEBIAN/control
 	@echo "Description: A MobaXterm for Linux" >> $(DEB_DIR)/DEBIAN/control
-	@echo " apXterm is a GTK+-based terminal emulator with support for multiple SSH sessions." >> $(DEB_DIR)/DEBIAN/control
+	@echo " apxterm is a GTK+-based terminal emulator with support for multiple SSH sessions." >> $(DEB_DIR)/DEBIAN/control
 	
 	# Create postinst script
 	@echo "#!/bin/sh" > $(DEB_DIR)/DEBIAN/postinst
 	@echo "set -e" >> $(DEB_DIR)/DEBIAN/postinst
-	@echo "# Create ~/.config/apxterm if it doesn't exist" >> $(DEB_DIR)/DEBIAN/postinst
-	@echo "[ ! -d \"\$$HOME/.config/apxterm\" ] && mkdir -p \"\$$HOME/.config/apxterm\"" >> $(DEB_DIR)/DEBIAN/postinst
-	@echo "# Copy default config if not present" >> $(DEB_DIR)/DEBIAN/postinst
-	@echo "[ ! -f \"\$$HOME/.config/apxterm/config.json\" ] && cp /usr/share/apxterm/config.json \"\$$HOME/.config/apxterm/config.json\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "LOG=\"/tmp/apxterm_postinst.log\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "echo \"Running postinst at \$$(date)\" > \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "# Determine HOME directory" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "if [ -n \"\$$SUDO_USER\" ]; then HOME=\"/home/\$$SUDO_USER\"; else HOME=\"/home/\$$(whoami)\"; fi" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "echo \"HOME=\$$HOME\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "CONFIG_DIR=\"\$$HOME/.config/apxterm\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "if [ ! -d \"\$$CONFIG_DIR\" ]; then" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    echo \"Creating \$$CONFIG_DIR\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    mkdir -p \"\$$CONFIG_DIR\" || { echo \"Failed to create \$$CONFIG_DIR: \$$?\" >> \"\$$LOG\"; exit 1; }" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "else" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    echo \"\$$CONFIG_DIR already exists\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "fi" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "SRC=\"/usr/share/apxterm/config.json\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "DEST=\"\$$CONFIG_DIR/config.json\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "if [ ! -f \"\$$DEST\" ]; then" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    echo \"Copying \$$SRC to \$$DEST\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    cp \"\$$SRC\" \"\$$DEST\" || { echo \"Failed to copy \$$SRC to \$$DEST: \$$?\" >> \"\$$LOG\"; exit 1; }" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    chmod 644 \"\$$DEST\" || echo \"Failed to set permissions on \$$DEST\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "else" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "    echo \"\$$DEST already exists, skipping copy\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "fi" >> $(DEB_DIR)/DEBIAN/postinst
+	@echo "echo \"Postinst completed successfully\" >> \"\$$LOG\"" >> $(DEB_DIR)/DEBIAN/postinst
 	@chmod 755 $(DEB_DIR)/DEBIAN/postinst
-	@chmod 755 $(DEB_DIR)/usr/bin/apXterm
+	@chmod 755 $(DEB_DIR)/usr/bin/apxterm
 	@chmod 644 $(DEB_DIR)/usr/share/apxterm/config.json
 	dpkg-deb --build $(DEB_DIR) $(DEB_PACKAGE)
 
