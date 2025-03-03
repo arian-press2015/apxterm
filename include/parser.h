@@ -7,6 +7,7 @@
 #include <gtk/gtk.h>
 #include <cjson/cJSON.h>
 
+#define MAX_CONFIG_PATH_LEN 128
 #define MAX_NAME_LEN 128
 #define MAX_IP_LEN 16
 #define MAX_SSH_KEY_LEN 256
@@ -46,6 +47,7 @@ typedef struct Config
     int user_count;
 } Config;
 
+char *get_config_path();
 Config *get_config(const char *config_path);
 void free_config(Config *config);
 

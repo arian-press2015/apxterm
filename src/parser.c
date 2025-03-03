@@ -9,6 +9,19 @@ void free_config(Config *config);
 void free_user(User *user);
 void free_folder(Folder *folder);
 
+char *get_config_path()
+{
+    const char *home_dir = getenv("HOME");
+    if (!home_dir)
+    {
+        g_error("Could not determine home directory");
+    }
+    char *config_path = (char *)malloc(sizeof(char) * MAX_CONFIG_PATH_LEN);
+    snprintf(config_path, MAX_CONFIG_PATH_LEN, "%s/.config/apxterm/apconfig.json", home_dir);
+
+    return config_path;
+}
+
 Config *get_config(const char *config_path)
 {
     char *config_str = read_config(config_path);
