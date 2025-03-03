@@ -189,7 +189,7 @@ GList *clear_vte_grid(AppLayout *app_layout)
         GtkWidget *child = GTK_WIDGET(iter->data);
         g_object_ref(child); // Keep it alive
         gtk_container_remove(GTK_CONTAINER(app_layout->vte_grid), child);
-        removed_scrolls = g_list_append(removed_scrolls, child); // Save for reuse
+        removed_scrolls = g_list_prepend(removed_scrolls, child); // Save for reuse
     }
     g_list_free(children);
 
