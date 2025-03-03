@@ -90,6 +90,14 @@ void parse_user(cJSON *user_json, User *user)
     user->folders = NULL;
     user->folder_count = 0;
     user->username[0] = '\0';
+    user->id[0] = '\0';
+
+    cJSON *id_json = cJSON_GetObjectItemCaseSensitive(user_json, "id");
+    if (id_json && cJSON_IsString(id_json))
+    {
+        strncpy(user->id, id_json->valuestring, MAX_ID_LEN - 1);
+        user->id[MAX_ID_LEN - 1] = '\0';
+    }
 
     cJSON *username_json = cJSON_GetObjectItemCaseSensitive(user_json, "username");
     if (username_json && cJSON_IsString(username_json))
@@ -122,6 +130,14 @@ void parse_folder(cJSON *folder_json, Folder *folder)
     folder->servers = NULL;
     folder->server_count = 0;
     folder->name[0] = '\0';
+    folder->id[0] = '\0';
+
+    cJSON *id_json = cJSON_GetObjectItemCaseSensitive(folder_json, "id");
+    if (id_json && cJSON_IsString(id_json))
+    {
+        strncpy(folder->id, id_json->valuestring, MAX_ID_LEN - 1);
+        folder->id[MAX_ID_LEN - 1] = '\0';
+    }
 
     cJSON *name_json = cJSON_GetObjectItemCaseSensitive(folder_json, "name");
     if (name_json && cJSON_IsString(name_json))
@@ -168,6 +184,14 @@ void parse_server(cJSON *server_json, Server *server)
     server->name[0] = '\0';
     server->ip[0] = '\0';
     server->ssh_key[0] = '\0';
+    server->id[0] = '\0';
+
+    cJSON *id_json = cJSON_GetObjectItemCaseSensitive(server_json, "id");
+    if (id_json && cJSON_IsString(id_json))
+    {
+        strncpy(server->id, id_json->valuestring, MAX_ID_LEN - 1);
+        server->id[MAX_ID_LEN - 1] = '\0';
+    }
 
     cJSON *name_json = cJSON_GetObjectItemCaseSensitive(server_json, "name");
     if (name_json && cJSON_IsString(name_json))

@@ -1,16 +1,20 @@
 {
     "users": [
         {
+            "id": "user1",
             "username": "ap2015",
             "folders": [
                 {
+                    "id": "folder1",
                     "name": "MTN",
                     "folders": [
                         {
+                            "id": "folder2",
                             "name": "DMZ",
                             "folders": [],
                             "servers": [
                                 {
+                                    "id": "server1",
                                     "name": "master",
                                     "ip": "192.168.0.1",
                                     "ssh-key": "~/.ssh/id_rsa.pub"
@@ -18,10 +22,12 @@
                             ]
                         },
                         {
+                            "id": "folder3",
                             "name": "ESB",
                             "folders": [],
                             "servers": [
                                 {
+                                    "id": "server2",
                                     "name": "twopaas",
                                     "ip": "192.168.0.3",
                                     "ssh-key": "~/.ssh/id_rsa.pub"
@@ -31,6 +37,7 @@
                     ],
                     "servers": [
                         {
+                        "id": "server3",
                         "name": "onepaas",
                         "ip": "192.168.0.2",
                         "ssh-key": "~/.ssh/id_rsa.pub"
@@ -38,6 +45,7 @@
                     ]
                 },
                 {
+                    "id": "folder4",
                     "name": "MCI",
                     "folders": [],
                     "servers": []
