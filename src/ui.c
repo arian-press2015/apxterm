@@ -68,6 +68,15 @@ GtkWidget *create_paned_layout(GtkOrientation orientation)
     return paned;
 }
 
+GtkWidget *create_scrolled_tree_view(GtkWidget *tree_view)
+{
+    GtkWidget *scrolled = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    append_to_container(GTK_CONTAINER(scrolled), tree_view);
+
+    return scrolled;
+}
+
 GtkWidget *create_tree_view(Config *config)
 {
     // Create the tree store
@@ -92,17 +101,12 @@ GtkWidget *create_tree_view(Config *config)
     gtk_tree_view_column_add_attribute(column, text_renderer, "text", COLUMN_NAME);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
 
-    // Wrap in a scrolled window
-    GtkWidget *scrolled = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    append_to_container(GTK_CONTAINER(scrolled), tree_view);
-
-    return scrolled;
+    return tree_view;
 }
 
 GtkTreeStore *create_tree_store(Config *config)
 {
-    GtkTreeStore *store = gtk_tree_store_new(NUM_COLUMNS, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+    GtkTreeStore *store = gtk_tree_store_new(NUM_COLUMNS, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_INT);
     GtkTreeIter user_iter;
 
     for (int i = 0; i < config->user_count; i++)
@@ -112,6 +116,7 @@ GtkTreeStore *create_tree_store(Config *config)
         gtk_tree_store_set(store, &user_iter,
                            COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", 16, 0, NULL),
                            COLUMN_NAME, user->username,
+                           COLUMN_TYPE, USER_NODE,
                            -1);
 
         for (int j = 0; j < user->folder_count; j++)
@@ -132,6 +137,7 @@ void add_folder_to_parent(GtkTreeStore *store, GtkTreeIter *parent, Folder *fold
     gtk_tree_store_set(store, &folder_iter,
                        COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "folder", 16, 0, NULL),
                        COLUMN_NAME, folder->name,
+                       COLUMN_TYPE, FOLDER_NODE,
                        -1);
 
     // Recursively add sub-folders
@@ -152,6 +158,7 @@ void add_server_to_folder(GtkTreeStore *store, Folder *folder, GtkTreeIter *fold
         gtk_tree_store_set(store, &server_iter,
                            COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "network-server", 16, 0, NULL),
                            COLUMN_NAME, folder->servers[i].name,
+                           COLUMN_TYPE, SERVER_NODE,
                            -1);
     }
 }

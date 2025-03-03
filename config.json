@@ -16,6 +16,17 @@
                                     "ssh-key": "~/.ssh/id_rsa.pub"
                                 }
                             ]
+                        },
+                        {
+                            "name": "ESB",
+                            "folders": [],
+                            "servers": [
+                                {
+                                    "name": "twopaas",
+                                    "ip": "192.168.0.3",
+                                    "ssh-key": "~/.ssh/id_rsa.pub"
+                                }
+                            ]
                         }
                     ],
                     "servers": [

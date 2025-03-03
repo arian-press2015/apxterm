@@ -1,15 +1,88 @@
 #include "signals.h"
-#include "ui.h"
-#include "app.h"
+
+void add_vte(AppLayout *app_layout, AppData *app_data, Server *server);
 
 void connect_signal(gpointer instance, const gchar *signal, GCallback callback, gpointer user_data)
 {
     g_signal_connect(instance, signal, callback, user_data);
 }
 
+static Server *get_server_from_iter(Config *config, GtkTreeModel *model, GtkTreeIter *iter)
+{
+    gint node_type;
+    gchar *name;
+    gtk_tree_model_get(model, iter, COLUMN_TYPE, &node_type, COLUMN_NAME, &name, -1);
+
+    if (node_type != SERVER_NODE)
+    {
+        g_free(name);
+        return NULL;
+    }
+
+    // Traverse config to find matching server
+    for (int i = 0; i < config->user_count; i++)
+    {
+        User *user = &config->users[i];
+        for (int j = 0; j < user->folder_count; j++)
+        {
+            Folder *folder = &user->folders[j];
+            for (int k = 0; k < folder->server_count; k++)
+            {
+                if (strcmp(folder->servers[k].name, name) == 0)
+                {
+                    g_free(name);
+                    return &folder->servers[k];
+                }
+            }
+            // Check sub-folders recursively
+            for (int m = 0; m < folder->folder_count; m++)
+            {
+                Folder *sub_folder = &folder->folders[m];
+                for (int n = 0; n < sub_folder->server_count; n++)
+                {
+                    if (strcmp(sub_folder->servers[n].name, name) == 0)
+                    {
+                        g_free(name);
+                        return &sub_folder->servers[n];
+                    }
+                }
+            }
+        }
+    }
+    g_free(name);
+    return NULL; // Server not found
+}
+
+void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data)
+{
+    AppState *state = (AppState *)user_data;
+    if (!state)
+    {
+        g_error(">> state is missing!");
+        return;
+    }
+
+    GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
+    GtkTreeIter iter;
+    if (!gtk_tree_model_get_iter(model, &iter, path))
+    {
+        return;
+    }
+
+    Server *server = get_server_from_iter(state->app_data->config, model, &iter);
+    if (server)
+    {
+        add_vte(state->app_layout, state->app_data, server);
+    }
+    else
+    {
+        printf("Server not found for path\n");
+    }
+}
+
 void add_vte(AppLayout *app_layout, AppData *app_data, Server *server)
 {
-    GtkWidget *scroll = create_vte_box(app_data,server);
+    GtkWidget *scroll = create_vte_box(app_data, server);
 
     int columns = 1;
     if (app_data->vte_count >= COLUMN_THRESHOLD_3)
@@ -22,6 +95,7 @@ void add_vte(AppLayout *app_layout, AppData *app_data, Server *server)
     g_object_ref(scroll);
 
     fill_vte_grid(app_layout, removed_scrolls, columns);
+    gtk_widget_show_all(scroll);
 }
 
 void activate_app(GtkApplication *app, gpointer user_data)
@@ -32,22 +106,14 @@ void activate_app(GtkApplication *app, gpointer user_data)
 
     AppLayout *app_layout = create_main_layout(GTK_CONTAINER(window));
 
-    Server *server = g_new0(Server, 1);
-    snprintf(server->name, MAX_NAME_LEN, "OnePaaS");
-    snprintf(server->ip, MAX_IP_LEN, "172.16.0.1");
-    snprintf(server->ssh_key, MAX_SSH_KEY_LEN, "~/.ssh/id_rsa.pub");
-
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-    add_vte(app_layout, app_data, server);
-
     GtkWidget *tree_view = create_tree_view(app_data->config);
-    gtk_box_pack_start(GTK_BOX(app_layout->sidebar_box), tree_view, TRUE, TRUE, 0);
+    GtkWidget *scrolled_tree = create_scrolled_tree_view(tree_view);
+    AppState *state = g_new0(AppState, 1);
+    state->app_data = app_data;
+    state->app_layout = app_layout;
+
+    g_signal_connect(tree_view, "row-activated", G_CALLBACK(on_row_activated), state);
+    gtk_box_pack_start(GTK_BOX(app_layout->sidebar_box), scrolled_tree, TRUE, TRUE, 0);
 
     app_data->entry = gtk_entry_new();
     gtk_entry_set_placeholder_text(GTK_ENTRY(app_data->entry), "Enter command for all terminals");
