@@ -106,7 +106,7 @@ GtkWidget *create_tree_view(Config *config)
 
 GtkTreeStore *create_tree_store(Config *config)
 {
-    GtkTreeStore *store = gtk_tree_store_new(NUM_COLUMNS, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_INT);
+    GtkTreeStore *store = gtk_tree_store_new(NUM_COLUMNS, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
     GtkTreeIter user_iter;
 
     for (int i = 0; i < config->user_count; i++)
@@ -114,10 +114,11 @@ GtkTreeStore *create_tree_store(Config *config)
         User *user = &config->users[i];
         gtk_tree_store_append(store, &user_iter, NULL);
         gtk_tree_store_set(store, &user_iter,
-                           COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", 16, 0, NULL),
-                           COLUMN_NAME, user->username,
-                           COLUMN_TYPE, USER_NODE,
-                           -1);
+                            COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", 16, 0, NULL),
+                            COLUMN_NAME, user->username,
+                            COLUMN_TYPE, USER_NODE,
+                            COLUMN_ID, user->id,
+                            -1);
 
         for (int j = 0; j < user->folder_count; j++)
         {
@@ -138,6 +139,7 @@ void add_folder_to_parent(GtkTreeStore *store, GtkTreeIter *parent, Folder *fold
                        COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "folder", 16, 0, NULL),
                        COLUMN_NAME, folder->name,
                        COLUMN_TYPE, FOLDER_NODE,
+                       COLUMN_ID, folder->id,
                        -1);
 
     // Recursively add sub-folders
@@ -159,6 +161,7 @@ void add_server_to_folder(GtkTreeStore *store, Folder *folder, GtkTreeIter *fold
                            COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "network-server", 16, 0, NULL),
                            COLUMN_NAME, folder->servers[i].name,
                            COLUMN_TYPE, SERVER_NODE,
+                           COLUMN_ID, folder->servers[i].id,
                            -1);
     }
 }

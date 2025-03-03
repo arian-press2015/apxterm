@@ -7,50 +7,62 @@ void connect_signal(gpointer instance, const gchar *signal, GCallback callback, 
     g_signal_connect(instance, signal, callback, user_data);
 }
 
-static Server *get_server_from_iter(Config *config, GtkTreeModel *model, GtkTreeIter *iter)
+Node get_node_by_id(Config *config, const char *id)
 {
-    gint node_type;
-    gchar *name;
-    gtk_tree_model_get(model, iter, COLUMN_TYPE, &node_type, COLUMN_NAME, &name, -1);
+    Node node = {NULL, USER_NODE};
 
-    if (node_type != SERVER_NODE)
-    {
-        g_free(name);
-        return NULL;
-    }
-
-    // Traverse config to find matching server
     for (int i = 0; i < config->user_count; i++)
     {
         User *user = &config->users[i];
+        if (strcmp(user->id, id) == 0)
+        {
+            node.node = user;
+            node.type = USER_NODE;
+            return node;
+        }
+
         for (int j = 0; j < user->folder_count; j++)
         {
             Folder *folder = &user->folders[j];
+            if (strcmp(folder->id, id) == 0)
+            {
+                node.node = folder;
+                node.type = FOLDER_NODE;
+                return node;
+            }
+
             for (int k = 0; k < folder->server_count; k++)
             {
-                if (strcmp(folder->servers[k].name, name) == 0)
+                if (strcmp(folder->servers[k].id, id) == 0)
                 {
-                    g_free(name);
-                    return &folder->servers[k];
+                    node.node = &folder->servers[k];
+                    node.type = SERVER_NODE;
+                    return node;
                 }
             }
-            // Check sub-folders recursively
+
             for (int m = 0; m < folder->folder_count; m++)
             {
                 Folder *sub_folder = &folder->folders[m];
+                if (strcmp(sub_folder->id, id) == 0)
+                {
+                    node.node = sub_folder;
+                    node.type = FOLDER_NODE;
+                    return node;
+                }
                 for (int n = 0; n < sub_folder->server_count; n++)
                 {
-                    if (strcmp(sub_folder->servers[n].name, name) == 0)
+                    if (strcmp(sub_folder->servers[n].id, id) == 0)
                     {
-                        g_free(name);
-                        return &sub_folder->servers[n];
+                        node.node = &sub_folder->servers[n];
+                        node.type = SERVER_NODE;
+                        return node;
                     }
                 }
             }
         }
     }
-    g_free(name);
-    return NULL; // Server not found
+    return node;
 }
 
 void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data)
@@ -69,14 +81,18 @@ void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColu
         return;
     }
 
-    Server *server = get_server_from_iter(state->app_data->config, model, &iter);
-    if (server)
+    gchar *id;
+    gtk_tree_model_get(model, &iter, COLUMN_ID, &id, -1);
+
+    Node node = get_node_by_id(state->app_data->config, id);
+    if (node.node && node.type == SERVER_NODE)
     {
+        Server *server = (Server *)node.node;
         add_vte(state->app_layout, state->app_data, server);
     }
     else
     {
-        printf("Server not found for path\n");
+        printf("Clicked non-server node (ID: %s)\n", id);
     }
 }
 

@@ -18,15 +18,21 @@ enum
     COLUMN_ICON,
     COLUMN_NAME,
     COLUMN_TYPE,
+    COLUMN_ID,
     NUM_COLUMNS
 };
 
-enum
+typedef enum
 {
     USER_NODE,
     FOLDER_NODE,
     SERVER_NODE
-};
+} NodeType;
+
+typedef struct {
+    void *node;
+    NodeType type;
+} Node;
 
 #define COLUMN_THRESHOLD_2 5
 #define COLUMN_THRESHOLD_3 13
