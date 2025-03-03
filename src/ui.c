@@ -214,7 +214,7 @@ void fill_vte_grid(AppLayout *app_layout, GList *scrolls, int columns)
     g_list_free(scrolls); // Free the list, not the widgets (already unref’d)
 }
 
-GtkWidget *create_vte_box(AppData *app_data, Server *server)
+BoxedVte *create_vte_box(AppData *app_data, Server *server)
 {
     GtkWidget *vte_box = create_box(GTK_ORIENTATION_VERTICAL, 5, -1, -1);
 
@@ -236,7 +236,10 @@ GtkWidget *create_vte_box(AppData *app_data, Server *server)
     app_data->terminals = g_list_append(app_data->terminals, entry);
     app_data->vte_count++;
 
-    return vte_box;
+    BoxedVte *boxed_vte = g_new0(BoxedVte, 1);
+    boxed_vte->vte_box = vte_box;
+    boxed_vte->vte = vte;
+    return boxed_vte;
 }
 
 GtkWidget *create_scrolled_vte(GtkWidget *vte)

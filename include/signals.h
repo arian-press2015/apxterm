@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 #include "ui.h"
 #include "app.h"
+#include "utils.h"
 
 typedef struct
 {

@@ -29,10 +29,17 @@ typedef enum
     SERVER_NODE
 } NodeType;
 
-typedef struct {
+typedef struct
+{
     void *node;
     NodeType type;
 } Node;
+
+typedef struct
+{
+    GtkWidget *vte_box;
+    GtkWidget *vte;
+} BoxedVte;
 
 #define COLUMN_THRESHOLD_2 5
 #define COLUMN_THRESHOLD_3 13
@@ -51,7 +58,7 @@ GtkWidget *create_box(GtkOrientation orientation, gint spacing, gint width, gint
 GtkWidget *create_vte_grid();
 GList *clear_vte_grid(AppLayout *app_layout);
 void fill_vte_grid(AppLayout *app_layout, GList *scrolls, int columns);
-GtkWidget *create_vte_box(AppData *app_data, Server *server);
+BoxedVte *create_vte_box(AppData *app_data, Server *server);
 GtkWidget *create_scrolled_vte(GtkWidget *vte);
 GtkWidget *create_vte();
 

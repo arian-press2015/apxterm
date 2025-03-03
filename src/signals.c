@@ -98,7 +98,8 @@ void on_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColu
 
 void add_vte(AppLayout *app_layout, AppData *app_data, Server *server)
 {
-    GtkWidget *scroll = create_vte_box(app_data, server);
+    BoxedVte *boxed_vte = create_vte_box(app_data, server);
+    ssh_vte(boxed_vte->vte, server);
 
     int columns = 1;
     if (app_data->vte_count >= COLUMN_THRESHOLD_3)
@@ -107,11 +108,11 @@ void add_vte(AppLayout *app_layout, AppData *app_data, Server *server)
         columns = 2;
 
     GList *removed_scrolls = clear_vte_grid(app_layout);
-    removed_scrolls = g_list_append(removed_scrolls, scroll);
-    g_object_ref(scroll);
+    removed_scrolls = g_list_append(removed_scrolls, boxed_vte->vte_box);
+    g_object_ref(boxed_vte->vte_box);
 
     fill_vte_grid(app_layout, removed_scrolls, columns);
-    gtk_widget_show_all(scroll);
+    gtk_widget_show_all(boxed_vte->vte_box);
 }
 
 void activate_app(GtkApplication *app, gpointer user_data)
