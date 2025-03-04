@@ -12,7 +12,7 @@ BIN_DIR = bin
 DEB_DIR = build/debian
 
 # version
-VERSION = 1.0-1
+VERSION = 1.0-4
 
 # Target executable
 TARGET = $(BIN_DIR)/apxterm
