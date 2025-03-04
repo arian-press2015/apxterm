@@ -41,7 +41,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
 
       - name: Upload Binary to Release
         uses: softprops/action-gh-release@v2
@@ -50,4 +50,4 @@ jobs:
           files: |
             ./apxterm_${{ env.VERSION }}_amd64.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RUNNER_TOKEN }}
