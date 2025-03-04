@@ -2,7 +2,7 @@
 set -e
 
 # Variables
-VERSION="1.0-1"  # Can be overridden or sourced later
+VERSION="1.0-5"  # Can be overridden or sourced later
 DEB_DIR="build/debian"
 TARGET="bin/apxterm"
 DEB_PACKAGE="apxterm_${VERSION}_amd64.deb"
