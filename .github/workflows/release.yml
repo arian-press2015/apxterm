@@ -1,0 +1,53 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Git Tags
+        run: git fetch --tags --force
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y libgtk-3-dev libvte-2.91-dev libcjson-dev build-essential
+
+      - name: Build Binary
+        run: |
+          make deb
+
+      - name: Verify Build Output
+        run: ls -lh ./apxterm_*.deb
+
+      - name: Get Version From Git Tag
+        id: version
+        run: echo "VERSION=$(git describe --tags --abbrev=0 || echo "v1.0")" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: "Release ${{ env.VERSION }}"
+          body: "Auto-generated release for ${{ env.VERSION }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Binary to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          files: |
+            ./apxterm_${{ env.VERSION }}_amd64.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
