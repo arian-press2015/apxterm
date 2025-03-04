@@ -1,6 +1,6 @@
 /*
  * apXterm - A terminal emulator with SSH support
- * Copyright (C) 2025 Your Name <your.email@example.com>
+ * Copyright (C) 2025 arian-press2015 <arian.press2015@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ void clear_app(GtkApplication *app)
     g_object_unref(app);
 }
 
-AppData *create_app_data() 
+AppData *create_app_data()
 {
     AppData *app_data = g_new0(AppData, 1);
     app_data->terminals = NULL;

@@ -1,6 +1,6 @@
 /*
  * apXterm - A terminal emulator with SSH support
- * Copyright (C) 2025 Your Name <your.email@example.com>
+ * Copyright (C) 2025 arian-press2015 <arian.press2015@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -132,11 +132,11 @@ GtkTreeStore *create_tree_store(Config *config)
         User *user = &config->users[i];
         gtk_tree_store_append(store, &user_iter, NULL);
         gtk_tree_store_set(store, &user_iter,
-                            COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", 16, 0, NULL),
-                            COLUMN_NAME, user->username,
-                            COLUMN_TYPE, USER_NODE,
-                            COLUMN_ID, user->id,
-                            -1);
+                           COLUMN_ICON, gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "avatar-default", 16, 0, NULL),
+                           COLUMN_NAME, user->username,
+                           COLUMN_TYPE, USER_NODE,
+                           COLUMN_ID, user->id,
+                           -1);
 
         for (int j = 0; j < user->folder_count; j++)
         {

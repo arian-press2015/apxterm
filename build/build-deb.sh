@@ -32,7 +32,7 @@ Section: utils
 Priority: optional
 Architecture: amd64
 Depends: libgtk-3-0 (>= 3.0), libvte-2.91-0 (>= 0.50), libcjson1
-Maintainer: AP2015 <arian.press2015@gmail.com>
+Maintainer: arian-press2015 <arian.press2015@gmail.com>
 Description: A MobaXterm for Linux
  apxterm is a GTK+-based terminal emulator with support for multiple SSH sessions.
 EOF
