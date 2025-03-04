@@ -13,8 +13,7 @@ $ make clean
 
 # run
 $ make run
+
+# debian binary
+$ make deb
 ```
-
-## incoming features
-
-- Implementing PTY communication with a shell (e.g., Bash) to allow real shell interaction.
